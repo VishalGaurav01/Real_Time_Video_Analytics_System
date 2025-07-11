@@ -1,0 +1,51 @@
+version: "3.8"
+
+services:
+  # Producer service: builds Docker image from ./producer-service, uses .env for environment variables
+  producer:
+    build: ./producer-service                # Build Docker image from the ./producer-service directory
+    container_name: producer_service         # Name the running container "producer"
+    env_file:                        # Load environment variables from this file and injects them as environment variables into the container at runtime.
+      - ./producer-service/.env
+    restart: unless-stopped          # Always restart unless explicitly stopped
+
+  # Consumer service: builds from ./consumer-service, uses .env, depends on producer
+  consumer:
+    build: ./consumer-service
+    container_name: consumer_service
+    env_file:
+      - ./consumer-service/.env
+    depends_on:                      # Wait for producer to be started before starting consumer
+      - producer             #Service name producer
+    restart: unless-stopped
+
+  # Post-processing service: builds from ./postprocess-service, uses .env, exposes port 8003
+  postprocess:
+    build: ./postprocess-service
+    container_name: postprocess_service
+    env_file:
+      - ./postprocess-service/.env
+    ports:
+      - "8003:8003"                  # Map host port 8003 to container port 8003
+    restart: unless-stopped
+
+# ---------------------------------------------------------------------------
+# What does "env_file" do?
+# ---------------------------------------------------------------------------
+# The "env_file" directive loads environment variables from the specified file
+# and injects them into the container at runtime. This is useful for keeping
+# secrets and configuration out of your Dockerfile and version control.
+#
+# Example: If ./consumer/.env contains "KAFKA_BROKERS=localhost:9092", then
+# inside the consumer container, the environment variable KAFKA_BROKERS will be set.
+#
+# ---------------------------------------------------------------------------
+# Difference between "env_file" and "environment":
+# ---------------------------------------------------------------------------
+# - "env_file": Loads variables from a file (good for many variables, secrets, .env files)
+# - "environment": Lets you specify variables inline in the compose file, like:
+#     environment:
+#       - KAFKA_BROKERS=localhost:9092
+#       - KAFKA_TOPIC=video-frames
+#
+# You can use both together; "environment" overrides variables from "env_file" if both are set.
