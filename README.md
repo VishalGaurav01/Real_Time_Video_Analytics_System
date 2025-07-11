@@ -176,7 +176,3 @@ terraform logs
 ## Docker Compose Reference
 
 See `docker-compose.yml` for service definitions. Each service loads environment variables from its own `.env` file using the `env_file` directive.
-
-## License
-
-This project is for demonstration purposes as part of the Optifye takehome assignment. 
