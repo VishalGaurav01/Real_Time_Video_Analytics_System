@@ -1,4 +1,4 @@
-# Optifye Takehome Project
+# Video Analysis Project
 
 A real-time video processing pipeline that streams RTSP video, processes it through Kafka, and performs inference using machine learning models.
 
@@ -7,7 +7,7 @@ A real-time video processing pipeline that streams RTSP video, processes it thro
 The project consists of several components working together to create a scalable video processing pipeline:
 
 ```
-optifye-takehome/
+Video-Analysis/
 ├── infra/                      # Infrastructure as Code (Terraform)
 │   ├── main.tf                 # Terraform root configuration
 │   ├── modules/
